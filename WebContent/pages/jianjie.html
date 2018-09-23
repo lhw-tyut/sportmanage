@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+ <style media="print">  
+        .noprint {  
+            display: none;  
+        }  
+    </style>
+<script type="text/javascript">
+function altRows(id){
+	if(document.getElementsByTagName){  
+		
+		var table = document.getElementById(id);  
+		var rows = table.getElementsByTagName("tr"); 
+		 
+		for(i = 0; i < rows.length; i++){          
+			if(i % 2 == 0){
+				rows[i].className = "evenrowcolor";
+			}else{
+				rows[i].className = "oddrowcolor";
+			}      
+		}
+	}
+}
+
+window.onload=function(){
+	altRows('alternatecolor');
+}
+</script>
+
+
+
+<style type="text/css">
+body{text-algin:center}
+table.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	text-algin:center;
+	font-size:20px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+}
+table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.oddrowcolor{
+	background-color:#d4e3e5;
+}
+.evenrowcolor{
+	background-color:#c3dde0;
+}
+</style>
+</head>
+<body>
+<div class="noprint" style="width:800px;margin:30px auto 0 auto;text-align:right;"> 
+   <input value="打印" type="button" onclick="window.print()" /> 
+   <form action=index1.html method="post">
+   <input value="返回" type="submit"  /> 
+   </form>
+  </div> 
+<div style="text-align:center;">
+<h1 align="center">项目简介以及任务分配书</h1>
+<table  class="altrowstable" id="alternatecolor" align="center" wdith="5" border="1" cellpadding="1" cellspacing="0" > 
+<tr><td>项目</td><td colspan="3">田径运动会管理系统</td></tr>
+<tr><td>项目组名</td><td colspan="3">挨踢急先锋</td></tr>
+<tr><td>项目组口号</td><td colspan="3">撸起袖子加油干！</td></tr>
+<tr><td>项目组长</td><td >刘宏伟</td><td >项目组成员</td><td >杨淑琴、何雯雯、范洪瑞、丰晋峰</td></tr>
+<tr><td colspan="4">任务分配</td></tr>
+<tr><td>成员</td><td colspan="3">任务</td></tr>
+<tr><td>杨淑琴</td><td colspan="3">赛前管理模块的需求分析、概要设计、详细设计</td></tr>
+<tr><td>范洪瑞</td><td rowspan="2" colspan="3">比赛管理模块的需求分析、概要设计、详细设计</td></tr>
+<tr><td>丰晋峰</td></tr>
+<tr><td>何雯雯</td><td colspan="3">查询模块的需求分析、概要设计、详细设计</td></tr>
+    <tr><td>刘宏伟</td><td colspan="3">编码及测试</td></tr>
+      <tr><td>备注</td><td colspan="3">打印功能没有按一个模块去分析，直接再需要打印的页面嵌入打印代码</td></tr> 
+</table>
+</div>
+</body>
+</html>

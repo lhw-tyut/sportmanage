@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sport.core.dao.SporterDao">
+ <sql id="selectCustomerListWhere">
+        <where>
+	       <if test="s_name != null" >
+	          s_name like "%"#{s_name}"%"
+	       </if>
+	       <if test="s_score != null" >
+	        and s_score = #{s_score}
+	       </if>
+	       <if test="s_ != null" >
+	        and cust_industry = #{s_industry}
+	       </if>
+	       <if test="cust_level != null" >
+	        and cust_level = #{cust_level}
+	       </if>
+        </where>
+    </sql>
+		<!-- 普通查询 通过运动类型和性别-->
+	<select id="selectSporterList" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT * FROM tb_sporters where s_type=#{s_type} and s_sex=#{s_sex}
+		order by s_score DESC
+		<if test="start !=null and rows != null">
+		limit #{start},#{rows}
+		</if>
+	</select>
+	<select id="selectSporterListF" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT * FROM tb_sporters where s_type=#{s_type} and s_sex=#{s_sex}
+		order by s_score DESC
+	
+	</select>
+	<select id="selectSporterListCount" parameterType="sporter"
+	                           resultType="Integer">
+	                           select count(*) from tb_sporters
+	                           where s_type=#{s_type} and s_sex=#{s_sex}
+	                           </select>
+		<!-- 条件查询 进入半决赛人员-->
+ <select id="selectSporterList1" parameterType="sporter" 
+                                           resultType="sporter">
+		select * from tb_sporters r1 where s_type=#{s_type} 
+		and s_sex=#{s_sex} 
+		and 
+		(select count(1) 
+		from tb_sporters r2 
+		where 
+		s_type=#{s_type} 
+		and s_sex=#{s_sex} and
+		r2.s_score<![CDATA[<=]]>r1.s_score)<![CDATA[<=]]>16
+		limit #{start},#{rows}
+		
+	</select>
+
+	<select id="selectSporterListG" parameterType="sporter" 
+                                           resultType="sporter">
+		select * from tb_sporters r1 where s_type=#{s_type} 
+		and s_sex=#{s_sex} 
+		and (select count(1) 
+		from tb_sporters r2 
+		where 
+		s_type=#{s_type} 
+		and s_sex=#{s_sex} and
+		r2.s_score<![CDATA[<=]]>r1.s_score)<![CDATA[<=]]>16
+	</select>
+
+		<!-- 条件查询 进入决赛人员-->
+	 <select id="selectSporterList2" parameterType="sporter" 
+                                           resultType="sporter">
+		select * from tb_sporters r1 where s_type=#{s_type} 
+		and s_sex=#{s_sex} 
+		and s_score1 is not null 
+		and (select count(1) 
+		from tb_sporters r2 
+		where 
+		s_type=#{s_type} 
+		and s_sex=#{s_sex} and
+		s_score1 is not null and
+		r2.s_score1<![CDATA[<=]]>r1.s_score1)<![CDATA[<=]]>8
+		<if test="start !=null and rows != null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	
+		<!-- 条件查询  决赛人员成绩表-->
+	<select id="selectSporterList3" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT * FROM tb_sporters where 
+	    s_sex=#{s_sex}
+	    and s_type =#{s_type}
+	   and s_score2 is not null
+	   order by s_score2 ASC
+	   <if test="start !=null and rows != null">
+		limit #{start},#{rows}
+		</if>
+<if test="start !=null and rows != null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+			<!-- 条件查询  决赛人员成绩表-->
+	<select id="selectSporterList4" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT * FROM tb_sporters where s_score2 is not null
+     
+	</select>
+	
+				<!-- 条件查询 跳远成绩 -->
+	<select id="selectSporterList5" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT * FROM tb_sporters where s_type=#{s_type}
+		order by s_score DESC
+              
+	</select>
+	<select id="selectSporterCredit" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT s_class,COALESCE(sum(s_credit),0) as s_credit
+		FROM tb_sporters 
+		where s_credit is not null 
+		group by s_class 
+		order by s_credit DESC
+              
+	</select>
+		<select id="selectSporterNewsreel" parameterType="sporter" 
+                                           resultType="sporter">
+		SELECT *
+		FROM tb_newsreel
+	</select>
+	<!-- 根据id获取客户信息 -->
+	<select id="getSporterById" parameterType="Integer" 
+	resultType="sporter">
+	    select * from tb_sporters where s_id = #{s_id}
+	</select>
+		<!-- 创建运动员-->
+    <insert id="createSporter" parameterType="sporter">
+	    insert into tb_sporters(
+	                     s_id,
+                         s_name,
+                         s_class,
+                         s_sno,
+                         s_sex,
+                         s_type,
+                         s_zu,
+                         s_score
+	             )
+	             values(#{s_id},
+	                    #{s_name},
+	                    #{s_class},
+	                    #{s_sno},
+	                    #{s_sex},
+	                    #{s_type},
+	                    #{s_zu},
+	                    #{s_score}
+	            )
+	</insert>
+
+	    <insert id="createSporterNewsreel" parameterType="sporter">
+	    insert into tb_newsreel(
+	                     s_id,
+                         s_name,
+                         s_class,
+                         s_sno,
+                         s_sex,
+                         s_type,                
+                         s_score
+	             )
+	             values(#{s_id},
+	                    #{s_name},
+	                    #{s_class},
+	                    #{s_sno},
+	                    #{s_sex},
+	                    #{s_type},
+	                    #{s_score}
+	            )
+	</insert>
+		<!-- 条件查询  根据编号、班级、学号-->
+	<select id="getSporter" parameterType="sporter"
+	resultType="sporter">
+	select * from tb_sporters where 1=1
+	<choose>
+	   <when test="s_id!=null and s_id !=''">
+	    and s_id=#{s_id}
+	   </when>
+	   <when test="s_name!=null and s_name !=''">
+	    and s_name =#{s_name}
+	   </when>
+	   <when test="s_class!=null and s_class !=''">
+	    and s_class =#{s_class}
+	   </when>
+	   <when test="s_sno!=null and s_sno !=''">
+	    and s_sno =#{s_sno}
+	   </when>
+	   <otherwise>
+	   and s_type is not null
+	   </otherwise>
+	</choose>
+	<if test="start !=null and rows != null">
+		limit #{start},#{rows}
+		</if>
+</select>
+<select id="getSporterCount" parameterType="sporter"
+	resultType="Integer">
+	select count(*) from tb_sporters where 1=1
+	<choose>
+	   <when test="s_id!=null and s_id !=''">
+	    and s_id=#{s_id}
+	   </when>
+	   <when test="s_name!=null and s_name !=''">
+	    and s_name =#{s_name}
+	   </when>
+	   <when test="s_class!=null and s_class !=''">
+	    and s_class =#{s_class}
+	   </when>
+	   <when test="s_sno!=null and s_sno !=''">
+	    and s_sno =#{s_sno}
+	   </when>
+	   <otherwise>
+	   and s_type is not null
+	   </otherwise>
+	</choose>
+</select>
+		<!--输入预赛成绩-->
+	<update id="updateSporter" parameterType="sporter">
+	   update tb_sporters set
+	    <if test="s_score!=null and s_score !=''">
+	    s_score=#{s_score}
+	   </if>
+	   
+	   where s_id=#{s_id}
+</update>
+<!--输入半决赛成绩-->
+<update id="updateSporter1" parameterType="sporter">
+	   update tb_sporters set
+	   s_score1=#{s_score1}
+	   where s_id=#{s_id}
+</update>
+<!--输入决赛成绩-->
+<update id="updateSporter2" parameterType="sporter">
+	   update tb_sporters set
+	   s_score2=#{s_score2}
+	   where s_id=#{s_id}
+</update>
+	<update id="updateSporterCredit" parameterType="sporter">
+	   update tb_sporters set
+	   s_credit=#{s_credit}
+	   where s_id=#{s_id}
+</update>
+<update id="updateNewsreel" parameterType="sporter">
+	   update tb_newsreel set
+	   s_score=#{s_score},s_name=#{s_name},s_class=#{s_class},s_sno=#{s_sno}
+	   where s_id=#{s_id}
+</update>
+</mapper>
